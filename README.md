@@ -283,3 +283,55 @@ persistent session repository used by chat.
 - No child-facing login or registration.
 - No Redis until scaling needs are demonstrated.
 - No database-backed lesson authoring until curriculum management requires it.
+
+## 10. Deployment Instructions
+
+### Local Setup
+
+1. Install project dependencies:
+   ```bash
+   npm install
+   ```
+
+2. Configure environment variables in `.env.local` if Supabase persistence is required:
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+   ```
+   Use the variable names expected by the Supabase client implementation. Never expose the service-role key to client-side code or commit it to version control.
+
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+4. Open `http://localhost:3000` in a browser to use the application.
+
+### Production Build
+
+1. Build the application:
+   ```bash
+   npm run build
+   ```
+
+2. Start the production server locally:
+   ```bash
+   npm run start
+   ```
+
+### Deployment to Vercel
+
+1. Push the project to a GitHub repository.
+2. Import the repository into Vercel.
+3. Configure the required environment variables in the Vercel project settings.
+4. Apply the SQL migration in `supabase/migrations/` if Supabase is configured.
+5. Deploy the application and open the generated URL.
+6. Verify the landing page, chat interactions, quizzes, mood selection, and progress dashboard.
+
+### Deployment Considerations
+
+- The application can run without Supabase using in-memory session storage.
+- In-memory session and progress data may be lost when the server restarts and may not be shared across server instances.
+- The existing database migration creates only the `conversations` table. Additional schema changes are required for reliable child profile and progress persistence.
+- Before production use, validate database permissions, input handling, and server-side access controls to protect children's data.
